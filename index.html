@@ -16,6 +16,11 @@
         .error { color: red; }
         .loading { font-style: italic; }
         .instructions { margin-top: 20px; }
+        .expiry-date {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -24,6 +29,7 @@
     <div id="license-key-display" style="display: none;">
         <h2>Your License Key:</h2>
         <p class="key" id="license-key"></p>
+        <p class="expiry-date" id="expiry-date"></p>
         <div class="instructions">
             <p><strong>Instructions:</strong></p>
             <ol>
@@ -41,6 +47,7 @@
         const statusDiv = document.getElementById('status');
         const licenseKeyDisplayDiv = document.getElementById('license-key-display');
         const licenseKeyElement = document.getElementById('license-key');
+        const expiryDateElement = document.getElementById('expiry-date');
 
         async function fetchLicenseKey(sessionId) {
             statusDiv.textContent = 'Purchase successful! Fetching your license key...';
@@ -63,13 +70,22 @@
                 }
 
                 const data = await response.json();
-                if (data.licenseKey) {
+                if (data.licenseKey && data.expiryDate) {
                     statusDiv.textContent = 'License key retrieved successfully!';
                     statusDiv.className = ''; // Remove loading class
                     licenseKeyElement.textContent = data.licenseKey;
+
+                    try {
+                        const expiry = new Date(data.expiryDate);
+                        expiryDateElement.textContent = `Valid until: ${expiry.toLocaleDateString()}`;
+                    } catch (dateError) {
+                        console.error("Error formatting expiry date:", dateError);
+                        expiryDateElement.textContent = `Expiry: ${data.expiryDate}`; // Fallback
+                    }
+
                     licenseKeyDisplayDiv.style.display = 'block'; // Show the key and instructions
                 } else {
-                    throw new Error('License key not found in response.');
+                    throw new Error('License key or expiry date not found in response.');
                 }
 
             } catch (error) {
