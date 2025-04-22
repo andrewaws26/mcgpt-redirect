@@ -1,28 +1,8 @@
+<!-- Temporary test code for index.html -->
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Redirecting...</title>
-    <script>
-        // IMPORTANT: Replace <your-extension-id> with your actual extension ID
-        const extensionId = "hkipkbfgepegnihgeegnofpmdmkbflok"; 
-        const optionsPage = `chrome-extension://${extensionId}/options.html`;
-
-        // Get query parameters from the current URL (passed by Stripe)
-        const urlParams = new URLSearchParams(window.location.search);
-        const purchaseStatus = urlParams.get('purchase');
-        const sessionId = urlParams.get('session_id');
-
-        // Construct the target URL for the extension's options page
-        let targetUrl = `${optionsPage}?purchase=${purchaseStatus}`;
-        if (sessionId) {
-            targetUrl += `&session_id=${sessionId}`;
-        }
-
-        // Redirect to the extension's options page
-        window.location.replace(targetUrl);
-    </script>
+<head><title>Test Redirect</title>
+<script>window.location.replace("https://www.google.com");</script>
 </head>
-<body>
-    <p>Please wait while we redirect you...</p>
-</body>
+<body>Redirecting...</body>
 </html>
